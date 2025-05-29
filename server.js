@@ -4,24 +4,55 @@ const { Sequelize, DataTypes, Op } = require('sequelize');
 const { v4: uuidv4 } = require('uuid');
 const nodemailer = require('nodemailer');
 require('dotenv').config();
-const twilio = require('twilio');
+// const twilio = require('twilio');
 const app = express();
 app.use(cors());
 app.use(express.json());
 
-// Sequelize setup
+//Sequelize setup
 const sequelize = new Sequelize(process.env.DATABASE_URL, {
   dialect: 'mysql',
   dialectOptions: {
     ssl: { rejectUnauthorized: false }
   }
 });
+const allowedOrigins = [
+  'http://localhost:5173',
+  'https://agm-voting-registration-oq7s.vercel.app'
+];
 
+app.use(cors({
+  origin: function (origin, callback) {
+    // allow requests with no origin like mobile apps or curl
+    if (!origin) return callback(null, true);
+    if (allowedOrigins.indexOf(origin) === -1) {
+      const msg = 'CORS policy does not allow access from this origin.';
+      return callback(new Error(msg), false);
+    }
+    return callback(null, true);
+  },
+  credentials: true
+}));
 
-const twilioClient = twilio(
-  process.env.TWILIO_ACCOUNT_SID,
-  process.env.TWILIO_AUTH_TOKEN
-);
+// const sequelize = new Sequelize(
+//   process.env.DB_NAME || 'e-voting',
+//   process.env.DB_USER || 'root',
+//   process.env.DB_PASS || '',
+//   {
+//     host: process.env.DB_HOST || 'localhost',
+//     dialect: 'mysql',
+//     logging: false,
+
+//     dialectOptions: {
+//     ssl: false // Disable SSL
+//   }
+//   },
+  
+//);
+// const twilioClient = twilio(
+//   process.env.TWILIO_ACCOUNT_SID,
+//   process.env.TWILIO_AUTH_TOKEN
+// );
 //Shareholder Model
 const Shareholder = sequelize.define('shareholders', {
   acno: { type: DataTypes.STRING, allowNull: false, primaryKey: true },
@@ -73,7 +104,10 @@ const transporter = nodemailer.createTransport({
   auth: {
     user: process.env.EMAIL_USER,
     pass: process.env.EMAIL_PASS
-  }
+  },
+  tls: {
+  minVersion: 'TLSv1.2'
+},
 });
 
 
