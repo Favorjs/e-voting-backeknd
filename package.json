@@ -1,0 +1,1 @@
+{"scripts":{"start":"nodemon server.js","build":"vite build","lint":"eslint .","preview":"vite preview"},"dependencies":{"body-parser":"^2.2.0","cors":"^2.8.5","dotenv":"^16.5.0","express":"^5.1.0","mongoose":"^8.14.1","mysql2":"^3.14.1","nodemailer":"^7.0.2","sequelize":"^6.37.7","twilio":"^5.6.1","uuid":"^11.1.0"}}
