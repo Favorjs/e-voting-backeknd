@@ -10,16 +10,13 @@ app.use(cors());
 app.use(express.json());
 
 // Sequelize setup
-const sequelize = new Sequelize(
-  process.env.DB_NAME || 'e-voting',
-  process.env.DB_USER || 'root',
-  process.env.DB_PASS || '',
-  {
-    host: process.env.DB_HOST || 'localhost',
-    dialect: 'mysql',
-    logging: false,
+const sequelize = new Sequelize(process.env.DATABASE_URL, {
+  dialect: 'mysql',
+  dialectOptions: {
+    ssl: { rejectUnauthorized: false }
   }
-);
+});
+
 
 const twilioClient = twilio(
   process.env.TWILIO_ACCOUNT_SID,
