@@ -17,7 +17,7 @@ const sequelize = new Sequelize(process.env.DATABASE_URL, {
 
 const allowedOrigins = [
   'http://localhost:5173',                   // Vite local frontend
-  'https://agm-voting-registration.vercel.app/'      // Replace with your actual deployed Vercel URL
+  'https://agm-voting-registration.vercel.app'      // Replace with your actual deployed Vercel URL
 ];
 
 const corsOptions = {
@@ -40,16 +40,16 @@ app.use(cors(corsOptions));
 
 
 
-app.use((req, res, next) => {
-  const origin = req.headers.origin;
-  if (allowedOrigins.includes(origin)) {
-    res.setHeader('Access-Control-Allow-Origin', origin);
-  }
-  res.setHeader('Access-Control-Allow-Credentials', 'true');
-  res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization');
-  res.setHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS');
-  next();
-});
+// app.use((req, res, next) => {
+//   const origin = req.headers.origin;
+//   if (allowedOrigins.includes(origin)) {
+//     res.setHeader('Access-Control-Allow-Origin', origin);
+//   }
+//   res.setHeader('Access-Control-Allow-Credentials', 'true');
+//   res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization');
+//   res.setHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS');
+//   next();
+// });
 
 // const twilioClient = twilio(
 //   process.env.TWILIO_ACCOUNT_SID,
