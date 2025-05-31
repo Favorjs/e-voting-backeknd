@@ -15,6 +15,41 @@ const sequelize = new Sequelize(process.env.DATABASE_URL, {
  
 });
 
+const allowedOrigins = [
+  'http://localhost:5173',                   // Vite local frontend
+  'https://agm-voting-registration.vercel.app/'      // Replace with your actual deployed Vercel URL
+];
+
+const corsOptions = {
+  origin: function (origin, callback) {
+    // allow requests with no origin (like curl, mobile apps)
+    if (!origin) return callback(null, true);
+    if (allowedOrigins.includes(origin)) {
+      callback(null, true);
+    } else {
+      console.log(`❌ Blocked by CORS: ${origin}`);
+      callback(new Error('Not allowed by CORS'));
+    }
+  },
+  credentials: true,
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+  allowedHeaders: ['Content-Type', 'Authorization']
+};
+
+app.use(cors(corsOptions));
+
+
+
+app.use((req, res, next) => {
+  const origin = req.headers.origin;
+  if (allowedOrigins.includes(origin)) {
+    res.setHeader('Access-Control-Allow-Origin', origin);
+  }
+  res.setHeader('Access-Control-Allow-Credentials', 'true');
+  res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization');
+  res.setHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS');
+  next();
+});
 
 // const twilioClient = twilio(
 //   process.env.TWILIO_ACCOUNT_SID,
@@ -184,7 +219,7 @@ app.post('/api/send-confirmation', async (req, res) => {
 
     await VerificationToken.create({ acno, token, email, phone_number, expires_at: expiresAt });
 
-    const confirmUrl = `http://localhost:3001/api/confirm/${token}`;
+    const confirmUrl = `https://e-voting-backeknd.railway.app/api/confirm/${token}`;
 
     await transporter.sendMail({
       from: 'E-Voting Portal <your@email.com>',
@@ -313,19 +348,19 @@ app.get('/api/registered-users', async (req, res) => {
       subject: '✅ Successfully Registered for Voting',
       html: `
         <h2>🎉 Hello ${shareholder.name},</h2>
-        <p>You have successfully registered for the upcoming e-voting session.</p>
+        <p>You have successfully registered for the upcoming e-voting session and zoom Meeting.</p>
         <p>✅ Your account is now active.</p>
         <h3>🗳️ Voting Instructions:</h3>
         <ul>
-          <li>Visit the <a href="http://yourdomain.com/e-voting">E-Voting Portal</a></li>
-          <li>Login using your registered email address: <strong>${shareholder.email}</strong></li> or <br> phone Number:<strong>${shareholder.phone_number}</strong>
-          <li>Follow the prompts to cast your vote</li>
+          <li>You will be recieve a zoom link on you mail to join the Annual General meeting </a></li>
+          <li>Login to zoom using only your registered email address: <strong>${shareholder.email}</strong>
+   
         </ul>
         <p>Thank you for participating!</p>
       `
     });
 
-    res.redirect('http://localhost:5173/registration-success');
+    res.redirect('https://agm-voting-registration.vercel.app/registration-success');
   } catch (err) {
     console.error(err);
     res.status(500).send('Server error');
@@ -333,10 +368,10 @@ app.get('/api/registered-users', async (req, res) => {
 });
 
 // Start server
-const PORT = process.env.PORT || 3001;
+const PORT = process.env.PORT;
 sequelize.sync().then(() => {
   console.log('✅ Database synced');
   app.listen(PORT, () => {
-    console.log(`🚀 Server running on http://localhost:${PORT}`);
+    console.log(`🚀 Server running on ${PORT}`);
   });
 });
