@@ -220,7 +220,7 @@ app.post('/api/send-confirmation', async (req, res) => {
 
     await VerificationToken.create({ acno, token, email, phone_number, expires_at: expiresAt });
 
-    const confirmUrl = `https://e-voting-backeknd.railway.app/api/confirm/${token}`;
+    const confirmUrl = `https://e-voting-backeknd-production.up.railway.app/api/confirm/${token}`;
 
     await transporter.sendMail({
       from: 'E-Voting Portal <your@email.com>',
