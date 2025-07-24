@@ -680,7 +680,7 @@ app.post('/api/send-confirmation', async (req, res) => {
         
         if (formattedPhone && isValidNigerianPhone(formattedPhone)) {
           await twilioClient.messages.create({
-            body: `Hello ${shareholder.name}, confirm MUTUAL BENEFITS ASSURANCE PLC AGM registration: ${confirmUrl}`,
+            body: `Hello ${shareholder.name}, confirm INTERNATIONAL BREWERIES PLC AGM registration: ${confirmUrl}`,
             from: process.env.TWILIO_PHONE_NUMBER,
             to: formattedPhone
           });
@@ -791,10 +791,10 @@ app.get('/api/confirm/:token', async (req, res) => {
     await transporter.sendMail({
       from: '"E-Voting Portal" <noreply@agm-registration.apel.com.ng>',
       to: shareholder.email,
-      subject: '✅ Registration Complete - MUTUAL BENEFITS ASSURANCE PLC AGM',
+      subject: '✅ Registration Complete - INTERNATIONAL BREWERIES PLC AGM',
       html: `
         <h2>🎉 Hello ${shareholder.name},</h2>
-        <p>Your registration for the MUTUAL BENEFITS ASSURANCE PLC Annual General Meeting is complete.</p>
+        <p>Your registration for the INTERNATIONAL BREWERIES PLC Annual General Meeting is complete.</p>
         <p><strong>ACNO:</strong> ${shareholder.acno}</p>
         <p><strong>Registered Email:</strong> ${shareholder.email}</p>
         <h3>Next Steps:</h3>
@@ -834,7 +834,7 @@ app.get('/api/confirm/:token', async (req, res) => {
         <div class="success">✅ Registration Successful</div>
         <div class="details">
           <h2>Hello ${shareholder.name}</h2>
-          <p>Your registration for the MUTUAL BENEFITS ASSURANCE PLC AGM is complete.</p>
+          <p>Your registration for the INTERNATIONAL BREWERIES PLC AGM is complete.</p>
           <p><strong>ACNO:</strong> ${shareholder.acno}</p>
           <p><strong>Email:</strong> ${shareholder.email}</p>
           ${smsEligible ? `<p class="sms-notice">📱 SMS notifications are currently disabled</p>` : ''}
